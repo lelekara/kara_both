@@ -1,4 +1,4 @@
-import { Camera } from "lucide-react";
+import { Camera, LogOut } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Button, buttonVariants } from "./ui/button";
@@ -30,7 +30,7 @@ export default async function NavBar() {
                       redirect('/sign-in')
                     }}>
                       <Button type="button" variant={"link"} className=""><Link href={"/dashboard"}>Dashboard</Link></Button>
-                      <Button type='submit'>Déconnexion</Button>
+                      <Button type='submit'><LogOut/>Déconnexion</Button>
                     </form>
                   ) : (
                     <Link href='/sign-in' className={buttonVariants({ variant: 'ghost' })}>

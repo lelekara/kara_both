@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { QrCode, Camera, Share2, Users } from "lucide-react"
+import { QrCode, Share2, Users } from "lucide-react"
 
 export default function Home() {
   return (

@@ -29,7 +29,7 @@ export default async function NavBar() {
                       });
                       redirect('/sign-in')
                     }}>
-                      
+                      <Button type="button" variant={"link"} className=""><Link href={"/dashboard"}>Dashboard</Link></Button>
                       <Button type='submit'>Déconnexion</Button>
                     </form>
                   ) : (

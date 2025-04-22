@@ -27,25 +27,55 @@ import {
   formSchema
 } from "@/lib/event-schema"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { authClient } from "@/lib/auth-client"
 
 export default function CreateEventPage() {
 
+  const { data: sessionData } = authClient.useSession()
+  console.log("Session data:", sessionData)
+
   const form = useForm < z.infer < typeof formSchema >> ({
     resolver: zodResolver(formSchema),
-
+    defaultValues: {
+      title: "",
+      Description: "",
+      secret: "",
+    },
   })
 
   function onSubmit(values: z.infer < typeof formSchema > ) {
+    const { title, Description, secret } = values;
+
     try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
+      // Send data to the API
+      fetch('/api/evenements/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, Description, secret, userId: sessionData?.user.id }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to submit the form');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log('Form submitted successfully:', data);
+          toast(
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+            </pre>
+          );
+        })
+        .catch((error) => {
+          console.error('Error submitting form:', error);
+          toast.error('Failed to submit the form. Please try again.');
+        });
     } catch (error) {
-      console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
+      console.error('Form submission error', error);
+      toast.error('Failed to submit the form. Please try again.');
     }
   }
 
@@ -109,11 +139,9 @@ export default function CreateEventPage() {
               <FormControl>
                 <Input 
                 placeholder="Votre code secret"
-                
-                type="number"
+                type="string"
                 {...field} />
               </FormControl>
-              
               <FormMessage />
             </FormItem>
           )}

@@ -24,28 +24,50 @@ import {
   Input
 } from "@/components/ui/input"
 import {
-  formSchema
+  formSchemaJoin
 } from "@/lib/event-schema"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function JoinEventPage() {
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react"
 
-  const form = useForm < z.infer < typeof formSchema >> ({
-    resolver: zodResolver(formSchema),
+export default function JoinEventPage() {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const form = useForm < z.infer < typeof formSchemaJoin >> ({
+    resolver: zodResolver(formSchemaJoin),
+    defaultValues: {
+      title: "",
+      secret: "",
+    },
 
   })
 
-  function onSubmit(values: z.infer < typeof formSchema > ) {
+  function onSubmit(values: z.infer < typeof formSchemaJoin > ) {
+    const { title, secret } = values;
+
     try {
-      console.log(values);
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
+      fetch(`/api/evenements/join?title=${encodeURIComponent(title)}&secret=${encodeURIComponent(secret)}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch event data');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.success) {
+            toast.success('Successfully joined the event!');
+          } else {
+            toast.error(data.message || 'Invalid title or secret code.');
+          }
+        })
+        .catch((error) => {
+          console.error('Error joining event:', error);
+          toast.error('Failed to join the event. Please try again.');
+        });
     } catch (error) {
-      console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
+      console.error('Form submission error', error);
+      toast.error('Failed to submit the form. Please try again.');
     }
   }
 
@@ -88,13 +110,21 @@ export default function JoinEventPage() {
             <FormItem>
               <FormLabel>Code secret</FormLabel>
               <FormControl>
-                <Input 
+              <div className="relative">
+                <Input
                 placeholder="Votre code secret"
-                
-                type="number"
-                {...field} />
+                type={showPassword ? "text" : "password"}
+                {...field}
+                />
+                <button
+                type="button"
+                className="absolute inset-y-0 right-0 flex items-center px-3"
+                onClick={() => setShowPassword((prev) => !prev)}
+                >
+                {showPassword ? <Eye/> : <EyeOff/>}
+                </button>
+              </div>
               </FormControl>
-              
               <FormMessage />
             </FormItem>
           )}

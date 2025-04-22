@@ -25,6 +25,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   photos   Photo[]
+  evenements    Evenement[] 
 
   @@map("user")
 }
@@ -83,6 +84,9 @@ model Evenement {
   codeAcces   String?   // facultatif : code pour restreindre l’accès
   photos      Photo[]
   createdAt   DateTime  @default(now())
+
+  user        User       @relation(fields: [userId], references: [id])
+  userId      String
 }
 
 model Photo {

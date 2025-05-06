@@ -33,7 +33,7 @@ export default async function DashboardPage() {
     orderBy: {
       createdAt: "desc",
     },
-    take: 3, // Limiter à 5 événements récents
+    take: 3, // Limiter à 3 événements récents
   })
 
   return (

@@ -7,11 +7,14 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
-export default async function EventPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+interface EventPageParams {
+  id: string
+}
+
+export default async function EventPage({ params }: { params: Promise<EventPageParams> }) {
+  // Attendre explicitement les paramètres
+  const { id } = await params
+
   // Vérifier si l'utilisateur est connecté
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -27,7 +30,7 @@ export default async function EventPage({
   // Récupérer l'événement
   const evenement = await prisma.evenement.findUnique({
     where: {
-      id: params.id,
+      id,
     },
   })
 
@@ -37,7 +40,7 @@ export default async function EventPage({
 
   return (
     <div className="min-h-screen bg-muted/20 p-4 md:p-8">
-      <Card className='w-full max-w-2xl mx-auto'>
+      <Card className="w-full max-w-2xl mx-auto">
         <CardHeader className="flex flex-col items-center justify-center">
           <CardTitle>
             <h1 className="text-4xl">{evenement.titre}</h1>
@@ -53,8 +56,8 @@ export default async function EventPage({
           </div>
         </CardContent>
         <CardFooter>
-          <Button className='w-full'>
-            <a href={`/evenement/${evenement.id}/photos`} >Voir les photos</a>
+          <Button className="w-full">
+            <a href={`/evenement/${evenement.id}/photos`}>Voir les photos</a>
           </Button>
         </CardFooter>
       </Card>

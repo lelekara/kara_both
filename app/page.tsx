@@ -18,13 +18,13 @@ export default function Home() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Link
-                  href="#"
+                  href="/create-event"
                   className="inline-flex h-12 items-center justify-center rounded-md bg-orange-500 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
                 >
                   Créer un événement
                 </Link>
                 <Link
-                  href="#"
+                  href="/join-event"
                   className="inline-flex h-12 items-center justify-center rounded-md border border-gray-200 bg-white px-6 py-3 text-base font-medium transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
                 >
                   Rejoindre un événement
@@ -33,7 +33,7 @@ export default function Home() {
             </div>
             <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src="/public/vercel.svg?height=800&width=600"
+                src="/next.svg?height=800&width=600"
                 alt="KaraBooth App Demo"
                 fill
                 className="object-cover"
@@ -112,7 +112,7 @@ export default function Home() {
               <div className="flex justify-center">
                 <div className="relative w-64 h-64">
                   <Image
-                    src="/placeholder.svg?height=256&width=256"
+                    src="/QR_code.svg"
                     alt="QR Code Demo"
                     width={256}
                     height={256}
@@ -132,7 +132,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="#"
+                href="/create-event"
                 className="inline-flex h-12 items-center justify-center rounded-md bg-orange-500 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
               >
                 Créer un événement

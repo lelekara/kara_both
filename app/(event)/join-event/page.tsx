@@ -47,7 +47,7 @@ export default function JoinEventPage() {
     const { title, secret } = values;
 
     try {
-      fetch(`/api/evenements/join?title=${encodeURIComponent(title)}&secret=${encodeURIComponent(secret)}`)
+      fetch(`/api/evenements/join?title=${encodeURIComponent(title ?? "" )}&secret=${encodeURIComponent(secret ?? "")}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Failed to fetch event data');

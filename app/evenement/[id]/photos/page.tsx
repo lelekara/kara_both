@@ -3,11 +3,12 @@ import Image from "next/image";
 import { Camera, Calendar, ImageOff } from "lucide-react";
 import ButtonDownload from "@/components/buttondonwload";
 
-export default async function PicturePage({ params }: { params: { id: string } }) {
+export default async function PicturePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   // Récupérer les photos de l'événement
   const photos = await prisma.photo.findMany({
     where: {
-      evenementId: params.id,
+      evenementId: id,
     },
     orderBy: {
       createdAt: "desc", // Trier par date de création
@@ -51,17 +52,12 @@ export default async function PicturePage({ params }: { params: { id: string } }
               >
                 <Image
                   src={photo.url || "/placeholder.svg"}
-                  alt={photo.description || "Photo de l'événement"}
+                  alt={ "Photo de l'événement"}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                   priority={photos.indexOf(photo) < 4} // Prioritize loading for first 4 images
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                  {photo.description && (
-                    <p className="text-white text-sm font-medium line-clamp-2">{photo.description}</p>
-                  )}
-                </div>
               </div>
             ))}
           </div>
@@ -76,7 +72,7 @@ export default async function PicturePage({ params }: { params: { id: string } }
         )}
       </div>
       <div className="fixed bottom-4 right-4 z-50">
-        <ButtonDownload photos={photos} eventName={eventInfo?.nom} />
+        <ButtonDownload photos={photos} eventName={eventInfo?.titre} />
       </div>
     </div>
   );

@@ -51,7 +51,7 @@ export default function SignUp() {
     {
       onRequest: (ctx) => {
         toast.message(`Creating your account...`, {
-          action: { label: "Cancel", onClick: () => ctx.abort() },
+          action: { label: "Cancel", onClick: () => console.log("Action canceled") },
         });
       },
       onSuccess: (ctx) => {

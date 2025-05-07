@@ -15,7 +15,7 @@ export default function Footer() {
           <Link href="#" className="text-sm text-gray-600 hover:text-orange-500 transition-colors">
             Contact
           </Link>
-          <Link href="#" className="text-sm text-gray-600 hover:text-orange-500 transition-colors">
+          <Link href="https://github.com/lelekara" className="text-sm text-gray-600 hover:text-orange-500 transition-colors">
             GitHub
           </Link>
           <Link href="#" className="text-sm text-gray-600 hover:text-orange-500 transition-colors">

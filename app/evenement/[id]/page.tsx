@@ -37,7 +37,7 @@ export default async function EventPage({
 
   return (
     <div className="min-h-screen bg-muted/20 p-4 md:p-8">
-      <Card>
+      <Card className='w-full max-w-2xl mx-auto'>
         <CardHeader className="flex flex-col items-center justify-center">
           <CardTitle>
             <h1 className="text-4xl">{evenement.titre}</h1>

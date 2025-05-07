@@ -5,10 +5,10 @@ export default function EvenementsLayout({
     children: React.ReactNode;
   }>) {
     return (
-  <main>
-      <div className="h-screen flex flex-col items-center justify-center">
+  <main className="min-h-screen bg-muted/20 p-4 md:p-8">
+
           {children}
-      </div>
+
   </main>
     );
   }

@@ -25,6 +25,11 @@ export default function Footer() {
       </div>
       <div className="mt-8 text-center text-sm text-gray-500">
         © {new Date().getFullYear()} KaraBooth. Tous droits réservés.
+
+
+
+
+        
       </div>
     </div>
   </footer>

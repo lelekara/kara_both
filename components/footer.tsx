@@ -12,7 +12,7 @@ export default function Footer() {
           <span className="text-lg font-semibold">KaraBooth</span>
         </div>
         <div className="flex gap-6">
-          <Link href="#" className="text-sm text-gray-600 hover:text-orange-500 transition-colors">
+          <Link href="mailto:lelekara.dev@gmail.com" className="text-sm text-gray-600 hover:text-orange-500 transition-colors">
             Contact
           </Link>
           <Link href="https://github.com/lelekara" className="text-sm text-gray-600 hover:text-orange-500 transition-colors">

@@ -33,9 +33,11 @@ export default function Home() {
             </div>
             <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-xl">
               <Image
-                src="/next.svg?height=800&width=600"
+                src="/SophieEtThomas.png"
+                width={730}
+                height={600}
+                quality={100}
                 alt="KaraBooth App Demo"
-                fill
                 className="object-cover"
                 priority
               />

@@ -20,9 +20,6 @@ export default async function EventPage({ params }: { params: Promise<EventPageP
     headers: await headers(),
   })
 
-  if (!session) {
-    return redirect('/sign-in')
-  }
 
   // Récupérer l'utilisateur
   const user = session?.user

@@ -9,6 +9,7 @@ interface DropzoneProps {
 
 export default function Dropzone({ evenementId }: DropzoneProps) {
   const [uploading, setUploading] = useState(false)
+  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]) // État pour stocker les fichiers téléchargés
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -21,23 +22,30 @@ export default function Dropzone({ evenementId }: DropzoneProps) {
           alert("Veuillez déposer uniquement des fichiers image.")
           return
         }
-        formData.append('files', file) // Ajouter chaque fichier au FormData
+        formData.append('photo', file) // Ajouter chaque fichier au FormData
       })
 
       formData.append('evenementId', evenementId) // Ajouter l'ID de l'événement
+      console.log('FormData:', evenementId)
 
       setUploading(true)
 
       try {
-        const response = await fetch('/api/photos/uploads', {
+        const response = await fetch(`http://78.129.77.194:3001/upload?evenementId=${evenementId}`, {
           method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+          },
           body: formData,
         })
 
         const result = await response.json()
 
         if (response.ok) {
-          alert(`Fichiers téléchargés avec succès : ${result.photos.map((photo: any) => photo.url).join(', ')}`)
+          alert(`Fichiers téléchargés avec succès`)
+          // Mettre à jour l'état avec les noms des fichiers téléchargés
+          const uploadedFileNames = files.map((file) => file.name)
+          setUploadedFiles((prev) => [...prev, ...uploadedFileNames])
         } else {
           alert(`Erreur : ${result.error}`)
         }
@@ -70,6 +78,14 @@ export default function Dropzone({ evenementId }: DropzoneProps) {
         className="hidden"
         onChange={handleFileChange}
       />
+      <div className="mt-4">
+        <h3 className="text-sm font-semibold">Fichiers téléchargés :</h3>
+        <ul className="mt-2 text-sm text-muted-foreground">
+          {uploadedFiles.map((file, index) => (
+            <li key={index}>{file}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }

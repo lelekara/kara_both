@@ -31,7 +31,8 @@ export default function Dropzone({ evenementId }: DropzoneProps) {
       setUploading(true)
 
       try {
-        const response = await fetch(`http://78.129.77.194:3001/upload?evenementId=${evenementId}`, {
+        const apiUrl = `${process.env.API_URL}?evenementId=${evenementId}`;
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',

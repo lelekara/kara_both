@@ -31,7 +31,7 @@ export default function Dropzone({ evenementId }: DropzoneProps) {
       setUploading(true)
 
       try {
-        const apiUrl = `${process.env.API_URL}?evenementId=${evenementId}`;
+        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}?evenementId=${evenementId}`;
         const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {

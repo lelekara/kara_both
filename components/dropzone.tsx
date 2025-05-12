@@ -29,7 +29,7 @@ export default function Dropzone({ evenementId }: DropzoneProps) {
       setUploading(true)
 
       try {
-        const response = await fetch('/api/photos/uploads', {
+        const response = await fetch(`http://78.129.77.194:3001/upload?evenementId=${evenementId}`, {
           method: 'POST',
           body: formData,
         })

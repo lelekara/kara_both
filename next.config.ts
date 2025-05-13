@@ -5,8 +5,8 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "78.129.77.194" ,
+        protocol: "https",
+        hostname: "karabooth.lelekara.studio" ,
         port: "3001",
         pathname: '/uploads/**',
       },

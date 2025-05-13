@@ -7,7 +7,6 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "karabooth.lelekara.studio" ,
-        port: "3001",
         pathname: '/uploads/**',
       },
     ],

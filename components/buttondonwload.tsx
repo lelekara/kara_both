@@ -1,29 +1,34 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import JSZip from "jszip";
 import { Button } from "@/components/ui/button";
-import { Camera } from "lucide-react";
+import { Download } from "lucide-react";
 
 interface ButtonDownloadProps {
   photos: { url: string }[];
   eventName?: string;
+  className?: string;
 }
 
-export default function ButtonDownload({ photos, eventName }: ButtonDownloadProps) {
+export default function ButtonDownload({ photos, eventName, className }: ButtonDownloadProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const downloadPhotosAsZip = async () => {
+    setIsLoading(true);
     const zip = new JSZip();
     const folder = zip.folder("photos");
 
-    if (!folder) return;
+    if (!folder) {
+      setIsLoading(false);
+      return;
+    }
 
-    // Ajouter chaque photo au dossier ZIP
     for (const photo of photos) {
       const response = await fetch(photo.url);
       const blob = await response.blob();
       folder.file(photo.url.split("/").pop() || "photo.jpg", blob);
     }
 
-    // Générer le fichier ZIP et le télécharger
     zip.generateAsync({ type: "blob" }).then((content) => {
       const url = URL.createObjectURL(content);
       const a = document.createElement("a");
@@ -31,12 +36,21 @@ export default function ButtonDownload({ photos, eventName }: ButtonDownloadProp
       a.download = `${eventName || "photos"}.zip`;
       a.click();
       URL.revokeObjectURL(url);
-    });
+      setIsLoading(false);
+    }).catch(() => setIsLoading(false));
   };
 
   return (
-    <Button variant="outline" size="icon" onClick={downloadPhotosAsZip} className="flex items-center gap-4">
-        <Camera className="w-12 h-12" />
+    <Button
+      onClick={downloadPhotosAsZip}
+      disabled={isLoading}
+      className={`w-25 h-25 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 flex flex-col items-center justify-center text-white text-lg font-bold shadow-2xl transition-transform hover:scale-110 ${className ?? ""}`}
+      aria-label="Télécharger toutes les photos"
+    >
+      <Download className={`w-10 h-10 mb-1 ${isLoading ? "animate-spin" : ""}`} />
+      <span className="text-xs font-semibold leading-tight">
+        {isLoading ? "Préparation..." : "Tout télécharger"}
+      </span>
     </Button>
   );
 }

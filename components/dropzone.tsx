@@ -2,6 +2,7 @@
 import { CloudUploadIcon } from 'lucide-react'
 import React, { useState } from 'react'
 import { Button } from './ui/button'
+import imageCompression from 'browser-image-compression'
 
 interface DropzoneProps {
   evenementId: string
@@ -11,51 +12,67 @@ export default function Dropzone({ evenementId }: DropzoneProps) {
   const [uploading, setUploading] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]) // État pour stocker les fichiers téléchargés
 
+  const handleFiles = async (files: FileList | File[]) => {
+    const options = {
+      maxWidthOrHeight: 1920,
+      maxSizeMB: 2, // optionnel, limite la taille finale
+      initialQuality: 0.8, // commence à 80% de qualité
+      useWebWorker: true,
+      fileType: 'image/jpeg', // force la conversion en JPEG
+      exifOrientation: null, // supprime les EXIF
+    }
+
+    const processedFiles = []
+    for (const file of files) {
+      // Optionnel : ne traiter que les images
+      if (!file.type.startsWith('image/')) continue
+
+      const compressedFile = await imageCompression(file, options)
+      processedFiles.push(compressedFile)
+    }
+
+    const formData = new FormData()
+    processedFiles.forEach((file) => {
+      formData.append('photo', file) // Ajouter chaque fichier au FormData
+    })
+
+    formData.append('evenementId', evenementId) // Ajouter l'ID de l'événement
+    console.log('FormData:', evenementId)
+
+    setUploading(true)
+
+    try {
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}?evenementId=${evenementId}`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+        },
+        body: formData,
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        alert(`Fichiers téléchargés avec succès`)
+        // Mettre à jour l'état avec les noms des fichiers téléchargés
+        const uploadedFileNames = processedFiles.map((file) => file.name)
+        setUploadedFiles((prev) => [...prev, ...uploadedFileNames])
+      } else {
+        alert(`Erreur : ${result.error}`)
+      }
+    } catch (error) {
+      console.error('Erreur lors du téléchargement :', error)
+      alert('Erreur lors du téléchargement des fichiers.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const files = Array.from(e.target.files) // Convertir FileList en tableau
-
-      const formData = new FormData()
-      files.forEach((file) => {
-        // Vérifier si chaque fichier est une image
-        if (!file.type.startsWith("image/")) {
-          alert("Veuillez déposer uniquement des fichiers image.")
-          return
-        }
-        formData.append('photo', file) // Ajouter chaque fichier au FormData
-      })
-
-      formData.append('evenementId', evenementId) // Ajouter l'ID de l'événement
-      console.log('FormData:', evenementId)
-
-      setUploading(true)
-
-      try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}?evenementId=${evenementId}`;
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-          },
-          body: formData,
-        })
-
-        const result = await response.json()
-
-        if (response.ok) {
-          alert(`Fichiers téléchargés avec succès`)
-          // Mettre à jour l'état avec les noms des fichiers téléchargés
-          const uploadedFileNames = files.map((file) => file.name)
-          setUploadedFiles((prev) => [...prev, ...uploadedFileNames])
-        } else {
-          alert(`Erreur : ${result.error}`)
-        }
-      } catch (error) {
-        console.error('Erreur lors du téléchargement :', error)
-        alert('Erreur lors du téléchargement des fichiers.')
-      } finally {
-        setUploading(false)
-      }
+      await handleFiles(files)
     }
   }
 

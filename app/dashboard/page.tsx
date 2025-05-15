@@ -45,13 +45,15 @@ export default async function DashboardPage() {
           <h1 className="text-3xl font-bold tracking-tight">Tableau de bord</h1>
           <p className="text-muted-foreground mt-1">Bienvenue, {user.name}. Gérez vos événements ici.</p>
         </div>
-        <Button asChild variant="outline" className="shadow-sm">
-          <Link href="/profile">Mon profil</Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/create-event">Créer un événement</Link>
+          </Button>
+          </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 mb-8">
+      <div className="grid gap-4  mb-8">
         <Card className="overflow-hidden">
           <CardHeader className="pb-2 bg-primary/5">
             <CardTitle className="text-sm font-medium">Événements créés</CardTitle>
@@ -59,15 +61,6 @@ export default async function DashboardPage() {
           <CardContent className="pt-6">
             <div className="text-3xl font-bold">{createdEventsCount}</div>
             <p className="text-xs text-muted-foreground mt-1">Événements que vous avez organisés</p>
-          </CardContent>
-        </Card>
-        <Card className="overflow-hidden">
-          <CardHeader className="pb-2 bg-primary/5">
-            <CardTitle className="text-sm font-medium">Événements rejoints</CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="text-3xl font-bold">0</div>
-            <p className="text-xs text-muted-foreground mt-1">Événements auxquels vous participez</p>
           </CardContent>
         </Card>
       </div>

@@ -16,7 +16,7 @@ export default function LazyImage(props: ImageProps) {
   const imageProps = {
     ...props,
     className: mergedClassName,
-    ...(props.priority ? {} : { loading: "lazy" }),
+    ...(props.priority ? {} : { loading: "lazy" as "lazy" }),
     onLoad: () => setLoaded(true),
   };
 

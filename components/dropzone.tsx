@@ -19,7 +19,7 @@ export default function Dropzone({ evenementId }: DropzoneProps) {
       initialQuality: 0.8, // commence à 80% de qualité
       useWebWorker: true,
       fileType: 'image/jpeg', // force la conversion en JPEG
-      exifOrientation: null, // supprime les EXIF
+      exifOrientation: undefined, // supprime les EXIF (undefined au lieu de null)
     }
 
     const processedFiles = []

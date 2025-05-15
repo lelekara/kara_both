@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { redirect } from "next/navigation"
 
 export default function CreateEventPage() {
-  const { data: sessionData, status } = authClient.useSession();
+  const { data: sessionData} = authClient.useSession();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

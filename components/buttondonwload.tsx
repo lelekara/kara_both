@@ -24,7 +24,13 @@ export default function ButtonDownload({ photos, eventName, className }: ButtonD
     }
 
     for (const photo of photos) {
-      const response = await fetch(photo.url);
+      // Générer l'URL publique Supabase si ce n'est pas déjà une URL complète
+      const isFullUrl = photo.url.startsWith('http');
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const url = isFullUrl
+        ? photo.url
+        : `${supabaseUrl}/storage/v1/object/public${photo.url}`;
+      const response = await fetch(url);
       const blob = await response.blob();
       folder.file(photo.url.split("/").pop() || "photo.jpg", blob);
     }

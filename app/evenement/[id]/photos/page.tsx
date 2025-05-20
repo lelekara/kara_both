@@ -7,6 +7,10 @@ import LazyImage from "@/components/LazyImage";
 
 const PHOTOS_PER_PAGE = 12;
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const getPhotoUrl = (photoUrl: string) =>
+  `${supabaseUrl}/storage/v1/object/public${photoUrl}`;
+
 export default async function PicturePage({
   params,
   searchParams,
@@ -32,10 +36,10 @@ export default async function PicturePage({
   ]);
 
   // Récupérer toutes les photos pour le téléchargement
-const allPhotos = await prisma.photo.findMany({
-  where: { evenementId: id },
-  orderBy: { createdAt: "desc" },
-});
+  const allPhotos = await prisma.photo.findMany({
+    where: { evenementId: id },
+    orderBy: { createdAt: "desc" },
+  });
 
   // Récupérer les informations de l'événement (pour le titre)
   const eventInfo =
@@ -87,7 +91,7 @@ const allPhotos = await prisma.photo.findMany({
                   className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-gradient-to-br from-orange-50 via-white to-pink-50 shadow-md hover:shadow-xl transition-all duration-300"
                 >
                   <LazyImage
-                    src={photo.url || "/placeholder.svg"}
+                    src={getPhotoUrl(photo.url) || "/placeholder.svg"}
                     alt={"Photo de l'événement"}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -136,7 +140,8 @@ const allPhotos = await prisma.photo.findMany({
               Aucune photo disponible
             </h3>
             <p className="text-gray-500 max-w-md">
-              Aucune photo n&apos;a encore été ajoutée pour cet événement. Revenez plus tard ou contactez l&apos;organisateur.
+              Aucune photo n&apos;a encore été ajoutée pour cet événement. Revenez
+              plus tard ou contactez l&apos;organisateur.
             </p>
           </div>
         )}

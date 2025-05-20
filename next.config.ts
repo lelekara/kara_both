@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: "karabooth.lelekara.studio" ,
         pathname: '/uploads/**',
       },
+      {
+        protocol: "https",
+        hostname: "hfpehqkwewwhdhfujmmz.supabase.co",
+        pathname: "/storage/v1/object/public/uploads/**",
+      },
     ],
   },
 };

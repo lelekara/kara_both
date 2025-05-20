@@ -3,6 +3,7 @@ import { CloudUploadIcon } from 'lucide-react'
 import React, { useState } from 'react'
 import { Button } from './ui/button'
 import imageCompression from 'browser-image-compression'
+import { supabase } from '../lib/supabase'
 
 interface DropzoneProps {
   evenementId: string
@@ -31,37 +32,44 @@ export default function Dropzone({ evenementId }: DropzoneProps) {
       processedFiles.push(compressedFile)
     }
 
-    const formData = new FormData()
-    processedFiles.forEach((file) => {
-      formData.append('photo', file) // Ajouter chaque fichier au FormData
-    })
-
-    formData.append('evenementId', evenementId) // Ajouter l'ID de l'événement
-    console.log('FormData:', evenementId)
-
     setUploading(true)
-
     try {
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}?evenementId=${evenementId}`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: formData,
-      })
-
-      const result = await response.json()
-
-      if (response.ok) {
-        alert(`Fichiers téléchargés avec succès`)
-        // Mettre à jour l'état avec les noms des fichiers téléchargés
-        const uploadedFileNames = processedFiles.map((file) => file.name)
-        setUploadedFiles((prev) => [...prev, ...uploadedFileNames])
-      } else {
-        alert(`Erreur : ${result.error}`)
+      const uploadedFileNames: string[] = []
+      for (const file of processedFiles) {
+        // Nettoyer le nom du fichier pour Supabase Storage
+        const cleanName = file.name
+          .normalize('NFD')
+          .replace(/[^a-zA-Z0-9.\-_]/g, '_');
+        // 1. Upload vers Supabase Storage
+        const { data, error } = await supabase.storage
+          .from('uploads')
+          .upload(`${evenementId}/${cleanName}`, file, {
+            cacheControl: '3600',
+            upsert: false,
+            contentType: file.type,
+          })
+        if (error) {
+          throw error
+        }
+        // 2. Enregistrement du chemin dans la DB via l'API
+        const chemin = `/uploads/${evenementId}/${cleanName}`;
+        const res = await fetch('/api/photos/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            url: chemin,
+            evenementId,
+            // tu peux ajouter d'autres infos si besoin (nom, userId, etc)
+          }),
+        });
+        if (!res.ok) {
+          throw new Error('Erreur lors de l\'enregistrement en base');
+        }
+        uploadedFileNames.push(cleanName)
       }
-    } catch (error) {
+      alert(`Fichiers téléchargés avec succès`)
+      setUploadedFiles((prev) => [...prev, ...uploadedFileNames])
+    } catch (error: any) {
       console.error('Erreur lors du téléchargement :', error)
       alert('Erreur lors du téléchargement des fichiers.')
     } finally {

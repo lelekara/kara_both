@@ -18,6 +18,8 @@ export default function LazyImage(props: ImageProps) {
     className: mergedClassName,
     ...(props.priority ? {} : { loading: "lazy" as "lazy" }),
     onLoad: () => setLoaded(true),
+    // Désactive l'optimisation Next.js pour éviter le quota Vercel sur Supabase
+    unoptimized: true,
   };
 
   return (

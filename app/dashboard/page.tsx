@@ -74,7 +74,7 @@ export default async function DashboardPage() {
           </div>
           {recentEvents.length > 0 && (
             <Button variant="outline" size="sm" asChild>
-              <Link href="/mes-evenements">Voir tous</Link>
+              <Link href="/evenement/all">Voir tous</Link>
             </Button>
           )}
         </CardHeader>

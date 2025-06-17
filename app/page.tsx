@@ -16,19 +16,19 @@ export default function Home() {
           <p className="text-xl text-gray-700 max-w-lg font-medium">
           KaraBooth simplifie le partage de photos d'événements. Créez un album, partagez un lien ou un QR code, et laissez vos invités ajouter leurs plus beaux moments.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 pt-6">
+          <div className="flex flex-col gap-4 pt-6">
           <Link
             href="/create-event"
             className="inline-flex h-14 items-center justify-center rounded-xl bg-gradient-to-r from-orange-500 to-pink-500 px-8 py-4 text-lg font-semibold text-white shadow-lg hover:scale-105 transition-transform"
           >
             Créer un événement
           </Link>
-          <Link
+{/*           <Link
             href="/join-event"
             className="inline-flex h-14 items-center justify-center rounded-xl border-2 border-orange-200 bg-white px-8 py-4 text-lg font-semibold text-orange-500 shadow hover:bg-orange-50 hover:scale-105 transition-transform"
           >
             Rejoindre un événement
-          </Link>
+          </Link> */}
           </div>
         </div>
         <div className="relative h-[730px] w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-orange-100">
@@ -92,7 +92,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Demo Section */}
+      {/* Demo Section
       <section className="container mx-auto px-4 py-20 md:py-28">
         <div className="bg-gradient-to-br from-orange-100 via-white to-pink-100 rounded-3xl p-12 md:p-16 shadow-2xl">
         <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -123,7 +123,7 @@ export default function Home() {
           </div>
         </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Call to action */}
       <section className="container mx-auto px-4 py-20 md:py-28">

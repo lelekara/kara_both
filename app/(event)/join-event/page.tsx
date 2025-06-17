@@ -43,10 +43,13 @@ export default function JoinEventPage() {
   })
 
   function onSubmit(values: z.infer<typeof formSchemaJoin>) {
-    const { title, secret } = values;
+    // Utilise 'titre' au lieu de 'title' pour correspondre à la DB
+    const titre = values.title;
+    const { secret } = values;
 
     try {
-      fetch(`/api/evenements/join?title=${encodeURIComponent(title ?? "" )}&secret=${encodeURIComponent(secret ?? "")}`)
+      const url = `/api/evenements/join?titre=${encodeURIComponent(titre ?? "")}` + (secret ? `&secret=${encodeURIComponent(secret)}` : "");
+      fetch(url)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Failed to fetch event data');
@@ -54,8 +57,9 @@ export default function JoinEventPage() {
           return response.json();
         })
         .then((data) => {
-          if (data.success) {
+          if (data.success && data.data?.id) {
             toast.success('Successfully joined the event!');
+            window.location.href = `/evenement/${data.data.id}`;
           } else {
             toast.error(data.message || 'Invalid title or secret code.');
           }
